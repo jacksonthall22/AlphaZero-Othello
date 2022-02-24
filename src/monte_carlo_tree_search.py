@@ -20,7 +20,7 @@ class MCTS:
     def __init__(self, exploration_weight: int = 1):
         self.Q = defaultdict(int)  # total reward of each node
         self.N = defaultdict(int)  # total visit count for each node
-        self.children = dict()     # children of each node (map the hash to the Node)
+        self.children = dict()     # children of each node (map the hash to the set of Nodes)
         self.exploration_weight = exploration_weight
 
     def choose(self, node: 'Node'):
@@ -40,6 +40,9 @@ class MCTS:
 
     def do_rollout(self, node: 'Node') -> None:
         """ Make the tree one layer better (train for one iteration). """
+        # todo "When a new node is encountered, instead of performing a rollout, the value of the new node
+        #      is obtained from the neural network itself. This value is propagated up the search path."
+        #      https://web.stanford.edu/~surag/posts/alphazero.html#:~:text=When%20a%20new%20node%20is%20encountered%2C%20instead%20of%20performing%20a%20rollout%2C%20the%20value%20of%20the%20new%20node%20is%20obtained%20from%20the%20neural%20network%20itself.%20This%20value%20is%20propagated%20up%20the%20search%20path.
         path = self._select(node)
         leaf = path[-1]
         self._expand(leaf)
@@ -131,7 +134,7 @@ class Node(ABC):
     @abstractmethod
     def __hash__(self) -> int:
         """ Nodes must be hashable """
-        return 123456789
+        return 0
 
     @abstractmethod
     def __eq__(self, other: 'Node') -> bool:
