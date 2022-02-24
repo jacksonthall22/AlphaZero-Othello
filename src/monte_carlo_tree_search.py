@@ -10,6 +10,8 @@ from abc import ABC, abstractmethod
 from collections import defaultdict
 import math
 from typing import Reversible, Generator, List, Set
+import chess.pgn
+import numpy as np
 
 
 class MCTS:
@@ -135,3 +137,34 @@ class Node(ABC):
     def __eq__(self, other: 'Node') -> bool:
         """ Nodes must be comparable """
         return True
+
+
+class MCTSGameNode(Node):
+
+    def __init__(self, game_node: chess.pgn.ChildNode):
+        self.game_node = game_node
+
+    def find_children(self) -> Set['Node']:
+        return set(MCTSGameNode(self.game_node.add_variation(move))
+                   for move in self.game_node.board().generate_legal_moves())
+
+    def find_random_child(self) -> 'Node':
+        return np.random.choice(self.find_children())
+
+    def is_terminal(self) -> bool:
+        return self.game_node.board().is_game_over()
+
+    def reward(self) -> float:
+        # todo Reward estimation will be the policy's output for this position.
+        #      Policy will be trained to make its output for each position (static eval)
+        #      match the reward found through MCTS minimax (dynamic eval, a much better estimate)
+        return 0
+
+    def __hash__(self) -> int:
+        return hash(self.game_node)
+
+    def __eq__(self, other: 'Node') -> bool:
+        if not isinstance(other, MCTSGameNode):
+            return False
+
+        return self == other.game_node
