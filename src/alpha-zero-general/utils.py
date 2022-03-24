@@ -1,4 +1,12 @@
-class AverageMeter(object):
+from enum import Enum
+
+class NetworkType(Enum):
+    CNN = 'cnn'
+    VIT = 'vit'
+NETWORK_TYPE = NetworkType.VIT
+
+
+class AverageMeter:
     """From https://github.com/pytorch/examples/blob/master/imagenet/main.py"""
 
     def __init__(self):

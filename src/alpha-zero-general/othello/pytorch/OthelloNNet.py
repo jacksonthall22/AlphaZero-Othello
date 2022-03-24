@@ -1,14 +1,11 @@
 import sys
 sys.path.append('..')
-from utils import *
 
-import argparse
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.optim as optim
-from torchvision import datasets, transforms
-from torch.autograd import Variable
+from torchsummary import summary
+
 
 class OthelloNNet(nn.Module):
     def __init__(self, game, args):
@@ -50,7 +47,7 @@ class OthelloNNet(nn.Module):
         s = F.dropout(F.relu(self.fc_bn1(self.fc1(s))), p=self.args.dropout, training=self.training)  # batch_size x 1024
         s = F.dropout(F.relu(self.fc_bn2(self.fc2(s))), p=self.args.dropout, training=self.training)  # batch_size x 512
 
-        pi = self.fc3(s)                                                                         # batch_size x action_size
-        v = self.fc4(s)                                                                          # batch_size x 1
+        pi = self.fc3(s)  # batch_size x action_size
+        v = self.fc4(s)   # batch_size x 1
 
         return F.log_softmax(pi, dim=1), torch.tanh(v)

@@ -6,13 +6,14 @@ import numpy as np
 from tqdm import tqdm
 
 sys.path.append('../../')
-from utils import *
+from utils import AverageMeter, dotdict, NetworkType, NETWORK_TYPE
 from NeuralNet import NeuralNet
 
 import torch
 import torch.optim as optim
 
-from .OthelloNNet import OthelloNNet as onnet
+from .OthelloNNet import OthelloNNet as onnet_cnn
+from .OthelloNNetViT import OthelloNNetViT as onnet_vit
 
 args = dotdict({
     'lr': 0.001,
@@ -25,8 +26,17 @@ args = dotdict({
 
 
 class NNetWrapper(NeuralNet):
-    def __init__(self, game):
-        self.nnet = onnet(game, args)
+    def __init__(self, game, network_type: NetworkType):
+        super().__init__(game)
+
+        if network_type == NetworkType.CNN:
+            self.nnet = onnet_cnn(game, args)
+        elif network_type == NetworkType.VIT:
+            self.nnet = onnet_vit(game, args)
+        else:
+            raise ValueError(f'network_type="{network_type.name}" not yet implemented')
+        self.network_type = network_type
+
         self.board_x, self.board_y = game.getBoardSize()
         self.action_size = game.getActionSize()
 
@@ -37,7 +47,7 @@ class NNetWrapper(NeuralNet):
         """
         examples: list of examples, each example is of form (board, pi, v)
         """
-        optimizer = optim.Adam(self.nnet.parameters())
+        optimizer = optim.AdamW(self.nnet.parameters())
 
         for epoch in range(args.epochs):
             print('EPOCH ::: ' + str(epoch + 1))
@@ -114,7 +124,7 @@ class NNetWrapper(NeuralNet):
         # https://github.com/pytorch/examples/blob/master/imagenet/main.py#L98
         filepath = os.path.join(folder, filename)
         if not os.path.exists(filepath):
-            raise ("No model in path {}".format(filepath))
+            raise RuntimeError("No model in path {}".format(filepath))
         map_location = None if args.cuda else 'cpu'
         checkpoint = torch.load(filepath, map_location=map_location)
         self.nnet.load_state_dict(checkpoint['state_dict'])

@@ -1,4 +1,7 @@
-class Game():
+from abc import ABC, abstractmethod
+
+
+class Game(ABC):
     """
     This class specifies the base Game class. To define your own game, subclass
     this class and implement the functions below. This works when the game is
@@ -11,6 +14,7 @@ class Game():
     def __init__(self):
         pass
 
+    @abstractmethod
     def getInitBoard(self):
         """
         Returns:
@@ -19,6 +23,7 @@ class Game():
         """
         pass
 
+    @abstractmethod
     def getBoardSize(self):
         """
         Returns:
@@ -26,6 +31,7 @@ class Game():
         """
         pass
 
+    @abstractmethod
     def getActionSize(self):
         """
         Returns:
@@ -33,6 +39,7 @@ class Game():
         """
         pass
 
+    @abstractmethod
     def getNextState(self, board, player, action):
         """
         Input:
@@ -46,6 +53,7 @@ class Game():
         """
         pass
 
+    @abstractmethod
     def getValidMoves(self, board, player):
         """
         Input:
@@ -59,6 +67,7 @@ class Game():
         """
         pass
 
+    @abstractmethod
     def getGameEnded(self, board, player):
         """
         Input:
@@ -72,6 +81,7 @@ class Game():
         """
         pass
 
+    @abstractmethod
     def getCanonicalForm(self, board, player):
         """
         Input:
@@ -88,6 +98,7 @@ class Game():
         """
         pass
 
+    @abstractmethod
     def getSymmetries(self, board, pi):
         """
         Input:
@@ -101,6 +112,7 @@ class Game():
         """
         pass
 
+    @abstractmethod
     def stringRepresentation(self, board):
         """
         Input:
