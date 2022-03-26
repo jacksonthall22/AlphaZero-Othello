@@ -3,7 +3,7 @@ from enum import Enum
 class NetworkType(Enum):
     CNN = 'cnn'
     VIT = 'vit'
-NETWORK_TYPE = NetworkType.VIT
+NETWORK_TYPE = NetworkType.CNN
 
 
 class AverageMeter:

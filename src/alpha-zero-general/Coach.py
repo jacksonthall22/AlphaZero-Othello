@@ -10,6 +10,7 @@ from tqdm import tqdm
 
 from Arena import Arena
 from MCTS import MCTS
+from utils import NetworkType
 
 log = logging.getLogger(__name__)
 
@@ -20,7 +21,14 @@ class Coach:
     in Game and NeuralNet. args are specified in main.py.
     """
 
-    def __init__(self, game, nnet, args):
+    def __init__(self, game, nnet, args, network_type):
+        if network_type == NetworkType.CNN:
+            self.best_checkpoint = 'cnn_best.pth.tar'
+        elif network_type == NetworkType.VIT:
+            self.best_checkpoint = 'vit_best.pth.tar'
+        else:
+            raise ValueError(f'network_type="{network_type}" not yet implemented')
+
         self.game = game
         self.nnet = nnet
         self.pnet = self.nnet.__class__(self.game, self.nnet.network_type)  # the competitor network
@@ -124,8 +132,9 @@ class Coach:
                 self.nnet.load_checkpoint(folder=self.args.checkpoint, filename='temp.pth.tar')
             else:
                 log.info('ACCEPTING NEW MODEL')
+                print('test: checkpoint:', self.best_checkpoint)
                 self.nnet.save_checkpoint(folder=self.args.checkpoint, filename=self.getCheckpointFile(i))
-                self.nnet.save_checkpoint(folder=self.args.checkpoint, filename='best.pth.tar')
+                self.nnet.save_checkpoint(folder=self.args.checkpoint, filename=self.best_checkpoint)
 
     def getCheckpointFile(self, iteration):
         return 'checkpoint_' + str(iteration) + '.pth.tar'

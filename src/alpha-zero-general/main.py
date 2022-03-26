@@ -5,15 +5,15 @@ import coloredlogs
 from Coach import Coach
 from othello.OthelloGame import OthelloGame as Game
 from othello.pytorch.NNet import NNetWrapper as nn
-from utils import dotdict, NETWORK_TYPE
+from utils import dotdict, NetworkType, NETWORK_TYPE
 
 log = logging.getLogger(__name__)
 
 coloredlogs.install(level='INFO')  # Change this to DEBUG to see more info.
 
 args = dotdict({
-    'numIters': 3,
-    'numEps': 50,              # Number of complete self-play games to simulate during a new iteration.
+    'numIters': 10,
+    'numEps': 100,              # Number of complete self-play games to simulate during a new iteration.
     'tempThreshold': 15,        #
     'updateThreshold': 0.6,     # During arena playoff, new neural net will be accepted if threshold or more of games are won.
     'maxlenOfQueue': 200000,    # Number of game examples to train the neural networks.
@@ -43,7 +43,7 @@ def main():
         log.warning('Not loading a checkpoint!')
 
     log.info('Loading the Coach...')
-    c = Coach(g, nnet, args)
+    c = Coach(g, nnet, args, NETWORK_TYPE)
 
     if args.load_model:
         log.info("Loading 'trainExamples' from file...")
@@ -54,4 +54,14 @@ def main():
 
 
 if __name__ == "__main__":
+    print('====================================')
+    print('            TRAINING CNN            ')
+    print('====================================')
+    NETWORK_TYPE = NetworkType.CNN
+    main()
+
+    print('====================================')
+    print('            TRAINING VIT            ')
+    print('====================================')
+    NETWORK_TYPE = NetworkType.VIT
     main()
