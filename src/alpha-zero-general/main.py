@@ -14,12 +14,12 @@ coloredlogs.install(level='INFO')  # Change this to DEBUG to see more info.
 
 def main():
     if NETWORK_TYPE == NetworkType.CNN:
-        num_iters = 2
-        load_model = True
+        num_iters = 100
+        load_model = False
         load_folder_file = 'cnn_best.pth.tar'
     elif NETWORK_TYPE == NetworkType.VIT:
-        num_iters = 1
-        load_model = True
+        num_iters = 100
+        load_model = False
         load_folder_file = 'vit_best.pth.tar'
     else:
         raise ValueError(f'NETWORK_TYPE="{network_type}" not yet implemented')
@@ -70,8 +70,8 @@ if __name__ == "__main__":
     # print('====================================')
     # print('            TRAINING CNN            ')
     # print('====================================')
-    # NETWORK_TYPE = NetworkType.CNN
-    # main()
+    NETWORK_TYPE = NetworkType.CNN
+    main()
 
     print('====================================')
     print('            TRAINING VIT            ')
