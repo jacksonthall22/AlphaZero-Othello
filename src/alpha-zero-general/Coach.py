@@ -21,13 +21,9 @@ class Coach:
     in Game and NeuralNet. args are specified in main.py.
     """
 
-    def __init__(self, game, nnet, args, network_type):
-        if network_type == NetworkType.CNN:
-            self.best_checkpoint = 'cnn_best.pth.tar'
-        elif network_type == NetworkType.VIT:
-            self.best_checkpoint = 'vit_best.pth.tar'
-        else:
-            raise ValueError(f'network_type="{network_type}" not yet implemented')
+    def __init__(self, game, nnet, args):
+        self.best_checkpoint = args.load_folder_file[1]
+        self.network_type = args.network_type
 
         self.game = game
         self.nnet = nnet
@@ -100,8 +96,7 @@ class Coach:
                 self.trainExamplesHistory.append(iterationTrainExamples)
 
             if len(self.trainExamplesHistory) > self.args.numItersForTrainExamplesHistory:
-                log.warning(
-                    f"Removing the oldest entry in trainExamples. len(trainExamplesHistory) = {len(self.trainExamplesHistory)}")
+                log.warning(f"Removing the oldest entry in trainExamples. len(trainExamplesHistory) = {len(self.trainExamplesHistory)}")
                 self.trainExamplesHistory.pop(0)
             # backup history to a file
             # NB! the examples were collected using the model from the previous iteration, so (i-1)  
@@ -137,7 +132,8 @@ class Coach:
                 self.nnet.save_checkpoint(folder=self.args.checkpoint, filename=self.best_checkpoint)
 
     def getCheckpointFile(self, iteration):
-        return 'checkpoint_' + str(iteration) + '.pth.tar'
+        prefix = ('cnn', 'vit')[self.network_type == NetworkType.VIT]
+        return f'{prefix}_checkpoint_{iteration}.pth.tar'
 
     def saveTrainExamples(self, iteration):
         folder = self.args.checkpoint
@@ -153,7 +149,14 @@ class Coach:
         examplesFile = modelFile + ".examples"
         if not os.path.isfile(examplesFile):
             log.warning(f'File "{examplesFile}" with trainExamples not found!')
-            r = input("Continue? [y|n]")
+            
+            # r = input("Continue? [y|n]")
+           
+            # ===========
+            # TODO remove
+            # ===========            
+            r = 'y'
+            
             if r != "y":
                 sys.exit()
         else:
