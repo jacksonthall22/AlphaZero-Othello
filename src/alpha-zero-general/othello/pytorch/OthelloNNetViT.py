@@ -19,16 +19,16 @@ class OthelloNNetViT(nn.Module):
         self.vit = ViT(image_size=(self.board_x, self.board_y),
                        channels=1,
                        patch_size=2,
-                       num_classes=256,
+                       num_classes=1024,
                        dim=128,
-                       depth=4,
+                       depth=12,
                        heads=16,
-                       mlp_dim=256,
+                       mlp_dim=1024,
                        dropout=0.1,
                        emb_dropout=0.1)
 
-        self.fc1 = nn.Linear(256, self.action_size)
-        self.fc2 = nn.Linear(256, 1)
+        self.fc1 = nn.Linear(1024, self.action_size)
+        self.fc2 = nn.Linear(1024, 1)
 
     def forward(self, s):
         s = s.unsqueeze(1)

@@ -7,6 +7,7 @@ from Coach import Coach
 from othello.OthelloGame import OthelloGame as Game
 from othello.pytorch.NNet import NNetWrapper as nn
 from utils import dotdict, NetworkType, NETWORK_TYPE
+from torchsummary import summary
 
 log = logging.getLogger(__name__)
 
@@ -48,6 +49,10 @@ def main():
 
     log.info('Loading %s...', nn.__name__)
     nnet = nn(g, NETWORK_TYPE)
+    #Printing out model size
+    # size = g.getBoardSize()
+    # summary(nnet.nnet, (size[0], size[1]))
+    # return 0
 
     if args.load_model:
         log.info('Loading checkpoint "%s/%s"...', args.load_folder_file[0], args.load_folder_file[1])
@@ -67,9 +72,9 @@ def main():
 
 
 if __name__ == "__main__":
-    # print('====================================')
-    # print('            TRAINING CNN            ')
-    # print('====================================')
+    print('====================================')
+    print('            TRAINING CNN            ')
+    print('====================================')
     NETWORK_TYPE = NetworkType.CNN
     main()
 
