@@ -11,7 +11,7 @@
 # Request memory 
 #SBATCH --mem=24G
 # Runtime (minutes)
-#SBATCH --time=45:00
+#SBATCH --time=48:00:00
 # Name job
 #SBATCH --job-name=Training
 # Name output file
