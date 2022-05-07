@@ -17,7 +17,7 @@ NUM_GAMES = 1000
 all_stats = torch.zeros((10, 3))
 mini_othello = True  # Play in 6x6 instead of the normal 8x8.
 print("(CNN Wins, ViT Wins, Draws)")
-for iteration in range(9, 100, 10):
+for iteration in range(10, 101, 10):
     if mini_othello:
         g = OthelloGame(6)
     else:
