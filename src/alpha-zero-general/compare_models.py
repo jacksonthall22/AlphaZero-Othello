@@ -54,10 +54,10 @@ for iteration in range(10, 101, 10):
 
     arena = Arena.Arena(n1p, player2, g, display=OthelloGame.display)
 
-    print("Iteration: " + str(iteration+1))
+    print("Iteration: " + str(iteration))
     stats = arena.playGames(NUM_GAMES, verbose=False)
     print(stats)
-    all_stats[iteration // 10] = torch.Tensor(stats)
+    all_stats[(iteration // 10) - 1] = torch.Tensor(stats)
 
 print(all_stats)
 cnn_wins = all_stats[:, 0]

@@ -50,9 +50,9 @@ def main():
     log.info('Loading %s...', nn.__name__)
     nnet = nn(g, NETWORK_TYPE)
     #Printing out model size
-    # size = g.getBoardSize()
-    # summary(nnet.nnet, (size[0], size[1]))
-    # return 0
+    size = g.getBoardSize()
+    summary(nnet.nnet, (size[0], size[1]))
+    return 0
 
     if args.load_model:
         log.info('Loading checkpoint "%s/%s"...', args.load_folder_file[0], args.load_folder_file[1])
